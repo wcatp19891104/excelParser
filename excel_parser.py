@@ -12,7 +12,7 @@ VOLT_INDEX = 8
 CURRENCY_INDEX = 9
 
 def calculate_v(volt):
-    return volt
+    return str(float(volt) * -1.0)
 
 def calculate_c(currency, ratio):
     ratio = float(ratio)
