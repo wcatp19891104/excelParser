@@ -5,7 +5,7 @@ from flask import Flask, request, redirect, url_for, render_template, send_from_
 import flask_mail
 from werkzeug import secure_filename
 
-UPLOAD_FOLDER = '/home/zaicheng/repo/'
+UPLOAD_FOLDER = '/home/ec2-user/repo/'
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 
 app = Flask(__name__)
