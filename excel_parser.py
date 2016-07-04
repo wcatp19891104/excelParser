@@ -14,8 +14,9 @@ CURRENCY_INDEX = 9
 def calculate_v(volt):
     return volt
 
-def calculate_c(currency):
-    return currency
+def calculate_c(currency, ratio):
+    ratio = float(ratio)
+    return str(float(currency) * ratio)
 
 def time_to_seconds(line):
     time_string = line.strip().split(COMMA)[TIME_INDEX]
@@ -23,17 +24,17 @@ def time_to_seconds(line):
     seconds_time = datetime.timedelta(hours=current_time.tm_hour, minutes=current_time.tm_min, seconds=current_time.tm_sec).total_seconds()
     return seconds_time
 
-def line_mapper(line):
+def line_mapper(line, currency_ratio):
     line = line.strip().split(COMMA)
     step_number = line[STEP_NUMBER_INDEX]
     step_repeat = line[STEP_REPEAT_INDEX]
     volt = calculate_v(line[VOLT_INDEX])
-    currency = calculate_v(line[CURRENCY_INDEX])
+    currency = calculate_c(line[CURRENCY_INDEX], currency_ratio)
     key = (step_number, step_repeat)
     value = (volt, currency)
     return key, value
 
-def read_excel(file_name):
+def read_excel(file_name, currency_ratio):
     excel_dict = dict()
     with open(file_name) as input_data:
         data_lines = input_data.readlines()
@@ -43,7 +44,7 @@ def read_excel(file_name):
         current_repeat_start_time = "00:00:01,0000"
         current_results = list()
         for line in data_lines:
-            k, v = line_mapper(line)
+            k, v = line_mapper(line, currency_ratio)
             current_repeat = k[1]
             current_time_in_seconds = time_to_seconds(line)
             # there is a new repeat, current_time_in_seconds should be 00:00:01
@@ -67,7 +68,7 @@ def read_excel(file_name):
     return excel_dict
 
 def retrieve_by_step(file_name, step_infos):
-    excel_dict = read_excel(file_name)
+    excel_dict = read_excel(file_name, step_infos[0][2])
     for info in step_infos:
         step_number = info[0]
         step_repeat = info[1]
